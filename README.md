@@ -69,17 +69,72 @@ and packages may be annotated
 
 ### Do objects get passed by reference or value in Java? Elaborate on that.
 *Java does manipulate objects by reference and all object variables are references
+*Take the badSwap() method for example:
 
-* What the difference between local, instance and class variables?
-* What is Dependency Injection?
-* What does the static word mean in Java? Can a static method be overridden in Java?
-* When is a static block run?
-* What is reflection?
-* How does the try{} catch{} finally{}
-* What is garbage collection? How does it work?
-* What is memory leak and how does Java handle it?
-* What does the keyword synchronized mean?
-* Explain Generics in Java
+    public void badSwap(int var1, int var2){
+      int temp = var1;
+      var1 = var2;
+      var2 = temp;
+    }
+*When badSwap() returns, the variables passed as arguments will still hold their original values. The method will also fail if we change the arguments type from int to Object, since Java passes object references by value as well. Now here is where it gets tricky:
+
+    public void tricky(Point argl, Point arg2) {
+      argl.x = 100;
+      argl.y = 100;
+      Point temp = argl;
+      argl = arg2;
+      arg2 = temp;
+    }
+    public static void main(String [] args)
+    {
+      Point pnt1 = new Point(0,0);
+      Point pnt2 = new Point(0,0);
+      System.out.println("X: " + pnt1.x + " Y: " +pnt1.y);
+      System.out.println("X: " + pnt2.x + " Y: " +pnt2.y);
+      System.out.println(" ");
+      tricky(pnt1,pnt2);
+      System.out.println("X: " + pnt1.x + " Y:" + pnt1.y);
+      System.out.println("X: " + pnt2.x + " Y: " +pnt2.y);
+    }
+*If we execute this main() method, we see the following output:
+       
+       X: 0 Y: 0
+       X: 0 Y: 0
+       X: 100 Y: 100
+       X: 0 Y: 0
+*The method successfully alters the value of pnt1, even though it is passed by value; however, a swap of pnt1 and pnt2 fails! This is the major source of confusion. In the main() method, pnt1 and pnt2 fails! This is the major source of confusion. In the main() method, pnt1 and pnt2 are nothing more than object references. When you pass pnt1 and pnt2 to the tricky() method, Java passes the references by value just like any other parameter. This means the references passed to the method are actually copies of the original references.
+      
+### What's the difference between local, instance and class variables?
+*The difference between instance variable and class variable also known as non-static vs variable in java is that instance variables are per instance(object) basis. On the other hand, Class variables are declared using static keyword and they have exact same value for every instance.
+*Classic variables maintain a single shared value for all instances of the class, even if no instance object of that class exists. You would use the static keyword to change an instance variable into a class variable. both instance and class variables are declared at the class level, not within methods.
+
+### What is Dependency Injection?
+*Dependency injection is a technique whereby one object(or static method) supplies the dependencies of another object. A dependency is an object that can be used(a service). An injection is the passing of a dependency to a dependent object (a client) that would use it.
+
+### What does the static word mean in Java? Can a static method be overridden in Java?
+*The static keyword in Java means that the variable or function is shared between all instances of that class as it belongs to the type, not the actua; objects themselves. So if you have a variable: private static int i = 0; and you increment it (i++) in one instance, the change will be reflected in all instances
+*Overriding is a feature of object oriented programming languages like Java that is related to run-time polymorphism. A subclass (or derived class) provides a specific implementation of a method in superclass (or base class)
+
+### When is a static block run?
+*The static initializer will be executed when the class is loaded. This normally occurs when you access the class in the class loading context for the first time. Static block is executed when a loaded class is initialized or referenced first.
+
+### What is reflection?
+*Java reflection makes it possible to inspect classes, interfaces, fields and methods at runtime, without knowing the names of the classes, methods etc at compile time. It is also possible to instantiate new objectss, invoke methods and get/set field values using reflection.
+
+### How does the try{} catch{} finally{}
+*The finally block always executes when the try block exits. this ensures that the finally block is executed even if an unexpected exception occurs. but finally is useful for more than just exception handling -- it allows the programmer to avoid having cleanup code accidentally bypassing by a return, continue, or break. If the JVM exits while the try or catch code is being executed, then the finally block may not execute. Likewise, if the thread executing the try or catch code is interrupted or killed, the finally block may not execute even though the application as a whole continues.
+
+### What is garbage collection? How does it work?
+*As long as an object is being referenced, the JVM considers it alive. Once an object is no longer referenced and therefore is not reachable by the application code, the garbage collector removes it and reclaims the unused memory
+
+### What is memory leak and how does Java handle it?
+*Java's automatic memory management relies on GC which periodically looks for unused objects and removes them. We can say that a memory leak in Java is a situation where some objects are not used by application any more, but GC fails to recognize them as unused.
+
+### What does the keyword synchronized mean?
+*Synchronized means that in a multi threaded environment, an object having synchronized method(s)/block(s) does not let two threads to access the synchronized method(s)/block(s) of code at the same time. This means that one thread can't read while another thread updates it.
+
+### Explain Generics in Java
+*Generics are a facility of generic programming that were added to the Java programming language in 2004 within version J2SE5.O. They were designed to extend Java's type system to allow "a type or method to operate on objects of various types while providing compile_time type safety".
 
 
 ## Web Development
